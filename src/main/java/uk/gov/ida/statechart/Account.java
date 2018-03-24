@@ -7,7 +7,7 @@ public class Account {
   private BigDecimal balance = new BigDecimal("0");
 
   public void deposit(BigDecimal amount) {
-    if (this.state == "open") {
+    if (this.state == "open" || this.state == "held") {
       this.balance = this.balance.add(amount);
     }
     else {
@@ -18,6 +18,24 @@ public class Account {
   public void withdraw(BigDecimal amount) {
     if (this.state == "open") {
       this.balance = this.balance.subtract(amount);
+    }
+    else {
+      throw new RuntimeException("Invalid event");
+    }
+  }
+
+  public void placeHold() {
+    if (this.state == "open") {
+      this.state = "held";
+    }
+    else {
+      throw new RuntimeException("Invalid event");
+    }
+  }
+
+  public void removeHold() {
+    if (this.state == "held") {
+      this.state = "open";
     }
     else {
       throw new RuntimeException("Invalid event");
@@ -48,6 +66,10 @@ public class Account {
 
   public String getState() {
     return this.state;
+  }
+
+  public BigDecimal getBalance() {
+    return this.balance;
   }
   
 }
