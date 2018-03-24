@@ -44,7 +44,7 @@ public final class Account {
     @Override
     public OpenAccountState removeHold() { return new OpenAccountState(this.balance); }
     @Override
-    public OpenAccountState deposit(BigDecimal amount) { return new OpenAccountState(this.balance.add(amount)); }
+    public HeldAccountState deposit(BigDecimal amount) { return new HeldAccountState(this.balance.add(amount)); }
     @Override
     public ClosedAccountState close() { return new ClosedAccountState(this.balance); }
     @Override
