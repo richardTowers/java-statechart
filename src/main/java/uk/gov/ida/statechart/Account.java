@@ -28,37 +28,28 @@ public final class Account {
     OpenAccountState() { this(BigDecimal.ZERO); }
     OpenAccountState(BigDecimal balance) { super(NAME, balance); }
 
-    @Override
-    public OpenAccountState deposit(BigDecimal amount) { return new OpenAccountState(this.balance.add(amount)); }
-    @Override
-    public OpenAccountState withdraw(BigDecimal amount) { return new OpenAccountState(this.balance.subtract(amount)); }
-    @Override
-    public HeldAccountState placeHold() { return new HeldAccountState(this.balance); }
-    @Override
-    public ClosedAccountState close() { return new ClosedAccountState(this.balance); }
-    @Override
-    public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
+    @Override public OpenAccountState deposit(BigDecimal amount) { return new OpenAccountState(this.balance.add(amount)); }
+    @Override public OpenAccountState withdraw(BigDecimal amount) { return new OpenAccountState(this.balance.subtract(amount)); }
+    @Override public HeldAccountState placeHold() { return new HeldAccountState(this.balance); }
+    @Override public ClosedAccountState close() { return new ClosedAccountState(this.balance); }
+    @Override public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
   }
 
   private final class HeldAccountState extends AccountState {
     public static final String NAME = "held";
     HeldAccountState(BigDecimal balance) { super(NAME, balance); }
 
-    @Override
-    public OpenAccountState removeHold() { return new OpenAccountState(this.balance); }
-    @Override
-    public HeldAccountState deposit(BigDecimal amount) { return new HeldAccountState(this.balance.add(amount)); }
-    @Override
-    public ClosedAccountState close() { return new ClosedAccountState(this.balance); }
-    @Override
-    public BigDecimal availableToWithdraw() { return BigDecimal.ZERO; }
+    @Override public OpenAccountState removeHold() { return new OpenAccountState(this.balance); }
+    @Override public HeldAccountState deposit(BigDecimal amount) { return new HeldAccountState(this.balance.add(amount)); }
+    @Override public ClosedAccountState close() { return new ClosedAccountState(this.balance); }
+    @Override public BigDecimal availableToWithdraw() { return BigDecimal.ZERO; }
   }
 
   private final class ClosedAccountState extends AccountState {
     public static final String NAME = "closed";
     ClosedAccountState(BigDecimal balance) { super(NAME, balance); }
-    @Override
-    public OpenAccountState reopen() { return new OpenAccountState(this.balance); }
+
+    @Override public OpenAccountState reopen() { return new OpenAccountState(this.balance); }
   }
 
   private AccountState state = new OpenAccountState();
