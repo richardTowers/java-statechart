@@ -2,11 +2,13 @@ package uk.gov.ida.statechart;
 
 import java.math.BigDecimal;
 
+import uk.gov.ida.statechart.annotations.State;
+import uk.gov.ida.statechart.annotations.Transition;;
+
 public abstract class AccountState {
-  public final String name;
   public final BigDecimal balance;
 
-  AccountState(String name, BigDecimal balance) { this.name = name; this.balance = balance; }
+  AccountState(BigDecimal balance) { this.balance = balance; }
 
   // Transitions
 
@@ -23,33 +25,32 @@ public abstract class AccountState {
 
   // States
 
+  @State(name = "open")
   public static final class Open extends AccountState {
-    public static final String NAME = "open";
-
     Open() { this(BigDecimal.ZERO); }
-    Open(BigDecimal balance) { super(NAME, balance); }
+    Open(BigDecimal balance) { super(balance); }
 
-    @Override public Open deposit(BigDecimal amount) { return new Open(balance.add(amount)); }
-    @Override public Open withdraw(BigDecimal amount) { return new Open(balance.subtract(amount)); }
-    @Override public Held placeHold() { return new Held(balance); }
-    @Override public Closed close() { return new Closed(balance); }
-    @Override public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
+    @Override @Transition public Open deposit(BigDecimal amount) { return new Open(balance.add(amount)); }
+    @Override @Transition public Open withdraw(BigDecimal amount) { return new Open(balance.subtract(amount)); }
+    @Override @Transition public Held placeHold() { return new Held(balance); }
+    @Override @Transition public Closed close() { return new Closed(balance); }
+    @Override @Transition public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
   }
 
+  @State(name = "held")
   public static final class Held extends AccountState {
-    public static final String NAME = "held";
-    Held(BigDecimal balance) { super(NAME, balance); }
+    Held(BigDecimal balance) { super(balance); }
 
-    @Override public Open removeHold() { return new Open(balance); }
-    @Override public Held deposit(BigDecimal amount) { return new Held(balance.add(amount)); }
-    @Override public Closed close() { return new Closed(balance); }
-    @Override public BigDecimal availableToWithdraw() { return BigDecimal.ZERO; }
+    @Override @Transition public Open removeHold() { return new Open(balance); }
+    @Override @Transition public Held deposit(BigDecimal amount) { return new Held(balance.add(amount)); }
+    @Override @Transition public Closed close() { return new Closed(balance); }
+    @Override @Transition public BigDecimal availableToWithdraw() { return BigDecimal.ZERO; }
   }
 
+  @State(name = "closed")
   public static final class Closed extends AccountState {
-    public static final String NAME = "closed";
-    Closed(BigDecimal balance) { super(NAME, balance); }
+    Closed(BigDecimal balance) { super(balance); }
 
-    @Override public Open reopen() { return new Open(balance); }
+    @Override @Transition public Open reopen() { return new Open(balance); }
   }
 }

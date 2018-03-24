@@ -2,6 +2,8 @@ package uk.gov.ida.statechart;
 
 import java.math.BigDecimal;
 
+import uk.gov.ida.statechart.annotations.State;
+
 public final class Account {
   private AccountState state = new AccountState.Open();
 
@@ -14,6 +16,9 @@ public final class Account {
 
   public BigDecimal availableToWithdraw() { return state.availableToWithdraw(); }
 
-  public String getState() { return state.name; }
+  public String getState() {
+    // TODO this is not very nice:
+    return state.getClass().getDeclaredAnnotation(State.class).name();
+  }
   public BigDecimal getBalance() { return state.balance; }
 }

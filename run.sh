@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-mvn compile
+set -e
+
+mvn clean compile
 mvn -e -q exec:java -Dexec.mainClass=uk.gov.ida.Main
