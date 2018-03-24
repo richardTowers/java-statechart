@@ -13,7 +13,7 @@ See the commit history for a follow-along of the blog posts in Java.
 Work so far
 -----------
 
-There's a reasonably readable state machine in [Account](src/main/java/uk/gov/ida/statechart/Account.java) which works in the same way as the JavaScript machine in raganwald's blog.
+There's a reasonably readable state machine in [AccountState](src/main/java/uk/gov/ida/statechart/AccountState.java) which works in the same way as the JavaScript machine in raganwald's blog.
 
 There's also code in [StatechartAnalyzer](src/main/java/uk/gov/ida/reflection/StatechartAnalyzer.java) which generates a UML diagram (via Plant UML), again, as per raganwald's blog.
 

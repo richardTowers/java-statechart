@@ -24,13 +24,12 @@ public class StatechartAnalyzer {
     Set<Class<?>> declaredClasses = new HashSet<>(Arrays.asList(containerClass.getDeclaredClasses()));
 
     return declaredClasses.stream()
-      .filter(x -> !Modifier.isAbstract(x.getModifiers()))
       .collect(toMap(k -> getStateClassName(k), v -> getNextStateTransitions(v, declaredClasses)));
   }
 
-  private static Map<String, List<String>> getNextStateTransitions(Class<?> currentStateClass, Set<Class<?>> declareClasses) {
+  private static Map<String, List<String>> getNextStateTransitions(Class<?> currentStateClass, Set<Class<?>> declaredClasses) {
     return Arrays.stream(currentStateClass.getDeclaredMethods())
-      .map(x -> new StringPair(x.getName(), getNewStateName(currentStateClass, x.getReturnType(), declareClasses)))
+      .map(x -> new StringPair(x.getName(), getNewStateName(currentStateClass, x.getReturnType(), declaredClasses)))
       .filter(x -> x.right != null)
       .collect(groupingBy(x -> x.right, mapping(x -> x.left, toList())));
   }

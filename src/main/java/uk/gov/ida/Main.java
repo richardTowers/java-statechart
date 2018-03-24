@@ -6,10 +6,11 @@ import java.util.Map.Entry;
 
 import uk.gov.ida.reflection.StatechartAnalyzer;
 import uk.gov.ida.statechart.Account;
+import uk.gov.ida.statechart.AccountState;
 
 public class Main {
     public static void main(String[] args) {
-        Map<String, Map<String, List<String>>> transitions = StatechartAnalyzer.getTransitions(Account.class);
+        Map<String, Map<String, List<String>>> transitions = StatechartAnalyzer.getTransitions(AccountState.class);
         System.out.println("@startuml");
         System.out.println("skinparam monochrome true");
         System.out.println("skinparam Shadowing false");
