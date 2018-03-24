@@ -79,4 +79,20 @@ public class AccountTests {
     assertEquals("open", account.getState());
   }
 
+  @Test
+  public void shouldGetTheBalanceAvailableToWithdraw() {
+    Account account = new Account();
+
+    BigDecimal amount = new BigDecimal("12.99");
+	  account.deposit(amount);
+    assertEquals(amount, account.availableToWithdraw());
+
+    account.placeHold();
+    assertEquals(BigDecimal.ZERO, account.availableToWithdraw());
+
+    account.removeHold();
+    account.withdraw(new BigDecimal("1000"));
+    assertEquals(BigDecimal.ZERO, account.availableToWithdraw());
+  }
+
 }

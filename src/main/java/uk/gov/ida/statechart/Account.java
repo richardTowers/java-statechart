@@ -10,12 +10,16 @@ public final class Account {
 
     AccountState(String name, BigDecimal balance) { this.name = name; this.balance = balance; }
 
+    // Transitions
     AccountState deposit(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
     AccountState withdraw(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
     ClosedAccountState close() { throw new RuntimeException("Invalid event"); }
     HeldAccountState placeHold() { throw new RuntimeException("Invalid event"); }
     OpenAccountState removeHold() { throw new RuntimeException("Invalid event"); }
     OpenAccountState reopen() { throw new RuntimeException("Invalid event"); }
+
+    // Methods
+    BigDecimal availableToWithdraw() { throw new RuntimeException("Invalid method"); }
   }
 
   private final class OpenAccountState extends AccountState {
@@ -30,6 +34,8 @@ public final class Account {
     public HeldAccountState placeHold() { return new HeldAccountState(this.balance); }
     @Override
     public ClosedAccountState close() { return new ClosedAccountState(this.balance); }
+    @Override
+    public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
   }
 
   private final class HeldAccountState extends AccountState {
@@ -41,6 +47,8 @@ public final class Account {
     public OpenAccountState deposit(BigDecimal amount) { return new OpenAccountState(this.balance.add(amount)); }
     @Override
     public ClosedAccountState close() { return new ClosedAccountState(this.balance); }
+    @Override
+    public BigDecimal availableToWithdraw() { return BigDecimal.ZERO; }
   }
 
   private final class ClosedAccountState extends AccountState {
@@ -60,4 +68,5 @@ public final class Account {
 
   public String getState() { return this.state.name; }
   public BigDecimal getBalance() { return this.state.balance; }
+  public BigDecimal availableToWithdraw() { return this.state.availableToWithdraw(); }
 }
