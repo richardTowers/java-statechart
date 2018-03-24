@@ -23,8 +23,10 @@ public final class Account {
   }
 
   private final class OpenAccountState extends AccountState {
+    public static final String NAME = "open";
+
     OpenAccountState() { this(BigDecimal.ZERO); }
-    OpenAccountState(BigDecimal balance) { super("open", balance); }
+    OpenAccountState(BigDecimal balance) { super(NAME, balance); }
 
     @Override
     public OpenAccountState deposit(BigDecimal amount) { return new OpenAccountState(this.balance.add(amount)); }
@@ -39,7 +41,8 @@ public final class Account {
   }
 
   private final class HeldAccountState extends AccountState {
-    HeldAccountState(BigDecimal balance) { super("held", balance); }
+    public static final String NAME = "held";
+    HeldAccountState(BigDecimal balance) { super(NAME, balance); }
 
     @Override
     public OpenAccountState removeHold() { return new OpenAccountState(this.balance); }
@@ -52,7 +55,8 @@ public final class Account {
   }
 
   private final class ClosedAccountState extends AccountState {
-    ClosedAccountState(BigDecimal balance) { super("closed", balance); }
+    public static final String NAME = "closed";
+    ClosedAccountState(BigDecimal balance) { super(NAME, balance); }
     @Override
     public OpenAccountState reopen() { return new OpenAccountState(this.balance); }
   }
