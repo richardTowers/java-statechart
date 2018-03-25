@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface State {
   String name();
+  boolean initial() default false;
 }
 
 

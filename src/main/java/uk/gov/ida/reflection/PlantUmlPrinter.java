@@ -1,26 +1,21 @@
 package uk.gov.ida.reflection;
 
-import java.util.List;
+import java.util.Set;
 
-class PlantUmlPrinter {
-  static String printPlantUml(List<StateHierarchy> stateHierarchy) {
+public class PlantUmlPrinter {
+  public static String printPlantUml(Set<StateHierarchy> stateHierarchy) {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("@startuml\n")
         .append("skinparam monochrome true\n")
         .append("skinparam Shadowing false\n");
-
     printPlantUml(stateHierarchy, stringBuilder, "");
-    stringBuilder.append("@enduml\n");
+    stringBuilder.append("@enduml");
     return stringBuilder.toString();
   }
 
-  private static void printPlantUml(List<StateHierarchy> stateHierarchies, StringBuilder stringBuilder, String indent) {
-    if (stateHierarchies.size() == 0) { return; }
-
-    boolean first = true;
-    for (StateHierarchy currentState: stateHierarchies) {
-      if (first) {
-        first = false;
+  private static void printPlantUml(Set<StateHierarchy> stateHierarchies, StringBuilder stringBuilder, String indent) {
+    stateHierarchies.forEach(currentState -> {
+      if (currentState.initial) {
         stringBuilder.append(indent).append("[*] --> ").append(currentState.name).append("\n");
       }
       if (currentState.children.size() > 0) {
@@ -30,7 +25,6 @@ class PlantUmlPrinter {
       }
       currentState.transitions.forEach(x -> stringBuilder
           .append(indent).append(currentState.name).append(" --> ").append(x.targetState).append(": ").append(x.name).append("\n"));
-    }
+    });
   }
-
 }

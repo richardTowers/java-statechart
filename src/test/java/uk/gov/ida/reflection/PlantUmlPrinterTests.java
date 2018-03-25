@@ -1,46 +1,50 @@
 package uk.gov.ida.reflection;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
+import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertEquals;
 
 public class PlantUmlPrinterTests {
 
-  private List<StateHierarchy> stateHierarchies = ImmutableList.of(
+  private Set<StateHierarchy> stateHierarchies = ImmutableSet.of(
       new StateHierarchy(
           "open",
-          ImmutableList.of(
+          true,
+          ImmutableSet.of(
               new StateHierarchy(
                   "held",
-                  Collections.emptyList(),
-                  ImmutableList.of(
+                  false,
+                  emptySet(),
+                  ImmutableSet.of(
                       new StateTransition("removeHold", "notHeld"),
                       new StateTransition("availableToWithdraw", "held")
                   )
               ),
               new StateHierarchy(
                   "notHeld",
-                  Collections.emptyList(),
-                  ImmutableList.of(
+                  true,
+                  emptySet(),
+                  ImmutableSet.of(
                       new StateTransition("placeHold", "held"),
                       new StateTransition("withdraw", "notHeld"),
                       new StateTransition("availableToWithdraw", "notHeld")
                   )
               )
           ),
-          ImmutableList.of(
+          ImmutableSet.of(
               new StateTransition("deposit", "open"),
               new StateTransition("close", "closed")
           )
       ),
       new StateHierarchy(
           "closed",
-          Collections.emptyList(),
-          ImmutableList.of(
+          false,
+          emptySet(),
+          ImmutableSet.of(
               new StateTransition("reopen", "open")
           )
       )

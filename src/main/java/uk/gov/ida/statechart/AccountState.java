@@ -1,9 +1,9 @@
 package uk.gov.ida.statechart;
 
-import java.math.BigDecimal;
-
 import uk.gov.ida.statechart.annotations.State;
 import uk.gov.ida.statechart.annotations.Transition;
+
+import java.math.BigDecimal;
 
 public interface AccountState {
   // Transitions
@@ -23,7 +23,7 @@ public interface AccountState {
 
   // States
 
-  @State(name = Open.NAME)
+  @State(name = Open.NAME, initial = true)
   abstract class Open implements AccountState {
     static final String NAME = "open";
     static NotHeld initial() { return new NotHeld(BigDecimal.ZERO); }
@@ -51,12 +51,12 @@ public interface AccountState {
     public Held clone(BigDecimal balance) { return new Held(balance); }
   }
 
-  @State(name = NotHeld.NAME)
+  @State(name = NotHeld.NAME, initial = true)
   final class NotHeld extends Open {
     static final String NAME = "notHeld";
     NotHeld(BigDecimal balance) { super(balance);}
 
-    @Override @Transition public Open withdraw(BigDecimal amount) { return new NotHeld(balance.subtract(amount)); }
+    @Override @Transition public NotHeld withdraw(BigDecimal amount) { return new NotHeld(balance.subtract(amount)); }
     @Override @Transition public Held placeHold() { return new Held(balance); }
     @Override @Transition public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
 
