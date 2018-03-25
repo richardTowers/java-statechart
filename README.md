@@ -1,5 +1,5 @@
-Java Statecharts
-================
+Java Statecharts [![Build Status](https://travis-ci.org/richardTowers/java-statechart.svg?branch=master)](https://travis-ci.org/richardTowers/java-statechart)
+==============================================================================================================================================================
 
 This repository is a playground for experimenting with state machines and statecharts in Java.
 
