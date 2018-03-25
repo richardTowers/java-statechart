@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertNotNull;
 
-public class StatechartAnalyzerTests {
+public class StatechartAnalyzerTest {
 
   @Test
   public void shouldGetHierarchy() {

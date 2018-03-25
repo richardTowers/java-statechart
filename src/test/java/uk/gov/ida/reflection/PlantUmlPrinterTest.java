@@ -8,7 +8,7 @@ import java.util.Set;
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertEquals;
 
-public class PlantUmlPrinterTests {
+public class PlantUmlPrinterTest {
 
   private Set<StateHierarchy> stateHierarchies = ImmutableSet.of(
       new StateHierarchy(

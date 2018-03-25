@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
-public class AccountTests {
+public class AccountTest {
 
   @Test
   public void shouldBeOpenInitially() {
