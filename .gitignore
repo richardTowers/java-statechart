@@ -1,5 +1,9 @@
+*.ipr
+*.iws
+*.iml
 *.swp
 /target
 /.classpath
 /.settings
 .vscode/
+

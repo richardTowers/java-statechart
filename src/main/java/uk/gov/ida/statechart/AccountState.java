@@ -3,17 +3,17 @@ package uk.gov.ida.statechart;
 import java.math.BigDecimal;
 
 import uk.gov.ida.statechart.annotations.State;
-import uk.gov.ida.statechart.annotations.Transition;;
+import uk.gov.ida.statechart.annotations.Transition;
 
-public abstract class AccountState {
-  public final BigDecimal balance;
+public abstract class AccountState<T extends AccountState<T>> {
+  final BigDecimal balance;
 
   AccountState(BigDecimal balance) { this.balance = balance; }
 
   // Transitions
 
-  AccountState deposit(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
-  AccountState withdraw(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
+  T deposit(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
+  T withdraw(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
   Closed close() { throw new RuntimeException("Invalid event"); }
   Held placeHold() { throw new RuntimeException("Invalid event"); }
   Open removeHold() { throw new RuntimeException("Invalid event"); }
@@ -26,7 +26,7 @@ public abstract class AccountState {
   // States
 
   @State(name = "open")
-  public static final class Open extends AccountState {
+  public static final class Open extends AccountState<Open> {
     Open() { this(BigDecimal.ZERO); }
     Open(BigDecimal balance) { super(balance); }
 
@@ -38,7 +38,7 @@ public abstract class AccountState {
   }
 
   @State(name = "held")
-  public static final class Held extends AccountState {
+  public static final class Held extends AccountState<Held> {
     Held(BigDecimal balance) { super(balance); }
 
     @Override @Transition public Open removeHold() { return new Open(balance); }
@@ -48,7 +48,7 @@ public abstract class AccountState {
   }
 
   @State(name = "closed")
-  public static final class Closed extends AccountState {
+  public static final class Closed extends AccountState<Closed> {
     Closed(BigDecimal balance) { super(balance); }
 
     @Override @Transition public Open reopen() { return new Open(balance); }
