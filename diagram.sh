@@ -7,4 +7,4 @@ then
   >&2 echo "Please set PLANT_UML_PATH to the directory containing plantuml.jar"
   exit 1
 fi
-./run.sh | java -jar "${PLANT_UML_PATH}/plantuml.jar" -pipe > images/diagram.png
+java -jar "${PLANT_UML_PATH}/plantuml.jar" -pipe < diagram-desired.txt > images/diagram-desired.png

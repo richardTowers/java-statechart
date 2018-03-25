@@ -5,59 +5,75 @@ import java.math.BigDecimal;
 import uk.gov.ida.statechart.annotations.State;
 import uk.gov.ida.statechart.annotations.Transition;
 
-public abstract class AccountState<T extends AccountState<T>> {
-  final BigDecimal balance;
-  final String name;
-
-  AccountState(String name, BigDecimal balance) {
-    this.name = name;
-    this.balance = balance;
-  }
-
+public interface AccountState {
   // Transitions
 
-  T deposit(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
-  T withdraw(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
-  Closed close() { throw new RuntimeException("Invalid event"); }
-  Held placeHold() { throw new RuntimeException("Invalid event"); }
-  Open removeHold() { throw new RuntimeException("Invalid event"); }
-  Open reopen() { throw new RuntimeException("Invalid event"); }
+  default AccountState deposit(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
+  default AccountState withdraw(BigDecimal amount) { throw new RuntimeException("Invalid event"); }
+  default Closed close() { throw new RuntimeException("Invalid event"); }
+  default Held placeHold() { throw new RuntimeException("Invalid event"); }
+  default NotHeld removeHold() { throw new RuntimeException("Invalid event"); }
+  default Open reopen() { throw new RuntimeException("Invalid event"); }
 
   // Methods
 
-  BigDecimal availableToWithdraw() { throw new RuntimeException("Invalid method"); }
+  default BigDecimal availableToWithdraw() { throw new RuntimeException("Invalid method"); }
+  BigDecimal getBalance();
+  String getName();
 
   // States
 
   @State(name = Open.NAME)
-  public static final class Open extends AccountState<Open> {
+  abstract class Open implements AccountState {
     static final String NAME = "open";
-    Open() { this(BigDecimal.ZERO); }
-    Open(BigDecimal balance) { super(NAME, balance); }
+    static NotHeld initial() { return new NotHeld(BigDecimal.ZERO); }
 
-    @Override @Transition public Open deposit(BigDecimal amount) { return new Open(balance.add(amount)); }
-    @Override @Transition public Open withdraw(BigDecimal amount) { return new Open(balance.subtract(amount)); }
-    @Override @Transition public Held placeHold() { return new Held(balance); }
+    final BigDecimal balance;
+    Open(BigDecimal balance) { this.balance = balance; }
+
+    @Override @Transition public Open deposit(BigDecimal amount) { return clone(balance.add(amount)); }
     @Override @Transition public Closed close() { return new Closed(balance); }
-    @Override @Transition public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
+
+    @Override public BigDecimal getBalance() { return balance; }
+
+    abstract Open clone(BigDecimal balance);
   }
 
   @State(name = Held.NAME)
-  public static final class Held extends AccountState<Held> {
+  final class Held extends Open {
     static final String NAME = "held";
-    Held(BigDecimal balance) { super(NAME, balance); }
+    Held(BigDecimal balance) { super(balance);}
 
-    @Override @Transition public Open removeHold() { return new Open(balance); }
-    @Override @Transition public Held deposit(BigDecimal amount) { return new Held(balance.add(amount)); }
-    @Override @Transition public Closed close() { return new Closed(balance); }
+    @Override @Transition public NotHeld removeHold() { return new NotHeld(balance); }
     @Override @Transition public BigDecimal availableToWithdraw() { return BigDecimal.ZERO; }
+
+    @Override public String getName() { return NAME; }
+    public Held clone(BigDecimal balance) { return new Held(balance); }
+  }
+
+  @State(name = NotHeld.NAME)
+  final class NotHeld extends Open {
+    static final String NAME = "notHeld";
+    NotHeld(BigDecimal balance) { super(balance);}
+
+    @Override @Transition public Open withdraw(BigDecimal amount) { return new NotHeld(balance.subtract(amount)); }
+    @Override @Transition public Held placeHold() { return new Held(balance); }
+    @Override @Transition public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
+
+    @Override public String getName() { return NAME; }
+
+    public NotHeld clone(BigDecimal balance) { return new NotHeld(balance); }
   }
 
   @State(name = Closed.NAME)
-  public static final class Closed extends AccountState<Closed> {
+  final class Closed implements AccountState {
     static final String NAME = "closed";
-    Closed(BigDecimal balance) { super(NAME, balance); }
+    private final BigDecimal balance;
+    Closed(BigDecimal balance) { this.balance = balance; }
 
-    @Override @Transition public Open reopen() { return new Open(balance); }
+    @Override @Transition public Open reopen() { return new NotHeld(balance); }
+
+    @Override public BigDecimal getBalance() { return balance; }
+    @Override public String getName() { return NAME; }
   }
 }

@@ -11,13 +11,13 @@ public class AccountTests {
   @Test
   public void shouldBeOpenInitially() {
     Account account = new Account();
-    assertEquals("open", account.getState());
+    assertEquals("not-held", account.getState());
   }
 
   @Test
   public void shouldAcceptDepositsWhenOpen() {
     Account account = new Account();
-    assertEquals("open", account.getState());
+    assertEquals("not-held", account.getState());
 
     BigDecimal amount = new BigDecimal("12.99");
 	  account.deposit(amount);
@@ -27,7 +27,7 @@ public class AccountTests {
   @Test
   public void shouldAcceptWithdrawalsWhenOpen() {
     Account account = new Account();
-    assertEquals("open", account.getState());
+    assertEquals("not-held", account.getState());
 
     BigDecimal amount = new BigDecimal("12.99");
 	  account.withdraw(amount);
@@ -37,7 +37,7 @@ public class AccountTests {
   @Test
   public void shouldTransitionFromOpenToClosed() {
     Account account = new Account();
-    assertEquals("open", account.getState());
+    assertEquals("not-held", account.getState());
     account.close();
     assertEquals("closed", account.getState());
   }
@@ -76,7 +76,7 @@ public class AccountTests {
     account.placeHold();
     assertEquals("held", account.getState());
     account.removeHold();
-    assertEquals("open", account.getState());
+    assertEquals("not-held", account.getState());
   }
 
   @Test
