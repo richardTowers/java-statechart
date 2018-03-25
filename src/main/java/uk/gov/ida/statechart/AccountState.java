@@ -7,8 +7,12 @@ import uk.gov.ida.statechart.annotations.Transition;
 
 public abstract class AccountState<T extends AccountState<T>> {
   final BigDecimal balance;
+  final String name;
 
-  AccountState(BigDecimal balance) { this.balance = balance; }
+  AccountState(String name, BigDecimal balance) {
+    this.name = name;
+    this.balance = balance;
+  }
 
   // Transitions
 
@@ -25,10 +29,11 @@ public abstract class AccountState<T extends AccountState<T>> {
 
   // States
 
-  @State(name = "open")
+  @State(name = Open.NAME)
   public static final class Open extends AccountState<Open> {
+    static final String NAME = "open";
     Open() { this(BigDecimal.ZERO); }
-    Open(BigDecimal balance) { super(balance); }
+    Open(BigDecimal balance) { super(NAME, balance); }
 
     @Override @Transition public Open deposit(BigDecimal amount) { return new Open(balance.add(amount)); }
     @Override @Transition public Open withdraw(BigDecimal amount) { return new Open(balance.subtract(amount)); }
@@ -37,9 +42,10 @@ public abstract class AccountState<T extends AccountState<T>> {
     @Override @Transition public BigDecimal availableToWithdraw() { return balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO; }
   }
 
-  @State(name = "held")
+  @State(name = Held.NAME)
   public static final class Held extends AccountState<Held> {
-    Held(BigDecimal balance) { super(balance); }
+    static final String NAME = "held";
+    Held(BigDecimal balance) { super(NAME, balance); }
 
     @Override @Transition public Open removeHold() { return new Open(balance); }
     @Override @Transition public Held deposit(BigDecimal amount) { return new Held(balance.add(amount)); }
@@ -47,9 +53,10 @@ public abstract class AccountState<T extends AccountState<T>> {
     @Override @Transition public BigDecimal availableToWithdraw() { return BigDecimal.ZERO; }
   }
 
-  @State(name = "closed")
+  @State(name = Closed.NAME)
   public static final class Closed extends AccountState<Closed> {
-    Closed(BigDecimal balance) { super(balance); }
+    static final String NAME = "closed";
+    Closed(BigDecimal balance) { super(NAME, balance); }
 
     @Override @Transition public Open reopen() { return new Open(balance); }
   }

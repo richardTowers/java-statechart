@@ -16,9 +16,6 @@ public final class Account {
 
   BigDecimal availableToWithdraw() { return state.availableToWithdraw(); }
 
-  public String getState() {
-    // TODO this is not very nice:
-    return state.getClass().getDeclaredAnnotation(State.class).name();
-  }
+  public String getState() { return state.name; }
   BigDecimal getBalance() { return state.balance; }
 }
