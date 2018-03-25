@@ -6,9 +6,7 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import uk.gov.ida.helpers.Pair;
 import uk.gov.ida.statechart.annotations.State;
@@ -21,16 +19,13 @@ import uk.gov.ida.statechart.annotations.Transition;
 public class StatechartAnalyzer {
 
   /**
-   * @param containerClass an outer class containing States as inner classes.
+   * @param classes an array of state classes to analyze.
    *
-   * Searches for all inner classes marked with \@State annotations,
-   * and then establishes the transitions permitted by those States.
-   * 
    * @return a Map of state to next state to a set of all the named
    * transitions. This is useful for drawing diagrams.
    */
-  public static <T> Map<String, Map<String, Set<String>>> getTransitions(Class<T> containerClass) {
-    return Arrays.stream(containerClass.getDeclaredClasses())
+  public static Map<String, Map<String, Set<String>>> getTransitions(Class<?>... classes) {
+    return Arrays.stream(classes)
       .filter(declaredClass -> declaredClass.isAnnotationPresent(State.class))
       .collect(toMap(
         StatechartAnalyzer::getStateName,
@@ -73,4 +68,5 @@ public class StatechartAnalyzer {
   private static <T> String getStateName(Class<T> stateClass) {
       return stateClass.getDeclaredAnnotation(State.class).name();
   }
+
 }

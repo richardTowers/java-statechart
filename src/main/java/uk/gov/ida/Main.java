@@ -13,7 +13,12 @@ import uk.gov.ida.statechart.AccountState;
 
 public class Main {
   public static void main(String[] args) {
-    Map<String, Map<String, Set<String>>> transitions = StatechartAnalyzer.getTransitions(AccountState.class);
+    Map<String, Map<String, Set<String>>> transitions = StatechartAnalyzer.getTransitions(
+        AccountState.Open.class,
+        AccountState.Held.class,
+        AccountState.NotHeld.class,
+        AccountState.Closed.class
+    );
     System.out.println("@startuml");
     System.out.println("skinparam monochrome true");
     System.out.println("skinparam Shadowing false");
