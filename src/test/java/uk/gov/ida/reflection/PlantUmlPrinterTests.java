@@ -59,9 +59,9 @@ public class PlantUmlPrinterTests {
         "skinparam Shadowing false\n" +
         "[*] --> open\n" +
         "state open {\n" +
-        "  [*] --> held\n" +
         "  held --> notHeld: removeHold\n" +
         "  held --> held: availableToWithdraw\n" +
+        "  [*] --> notHeld\n" +
         "  notHeld --> held: placeHold\n" +
         "  notHeld --> notHeld: withdraw\n" +
         "  notHeld --> notHeld: availableToWithdraw\n" +
@@ -69,6 +69,6 @@ public class PlantUmlPrinterTests {
         "open --> open: deposit\n" +
         "open --> closed: close\n" +
         "closed --> open: reopen\n" +
-        "@enduml\n", result);
+        "@enduml", result);
   }
 }
