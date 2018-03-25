@@ -15,8 +15,9 @@ Work so far
 
 There's a reasonably readable state machine in [AccountState](src/main/java/uk/gov/ida/statechart/AccountState.java) which works in the same way as the JavaScript machine in raganwald's blog.
 
-There's also code in [StatechartAnalyzer](src/main/java/uk/gov/ida/reflection/StatechartAnalyzer.java) which generates a UML diagram (via Plant UML), again, as per raganwald's blog.
+There's also code in [StatechartAnalyzer](src/main/java/uk/gov/ida/reflection/StatechartAnalyzer.java) which uses 
+reflection to generate a machine-readable description of the state machine, and [PlantUmlPrinter](src/main/java/uk/gov/ida/reflection/PlantUmlPrinter.java) which generates a UML diagram (via Plant UML).
 
-The diagram of the Account machine looks like this:
+The diagram of the Account machine currently looks like this:
 
 ![Auto-generated state machine diagram](images/diagram.png)
